@@ -1,4 +1,14 @@
+using Microsoft.EntityFrameworkCore;
+using DotNetEnv;
+using EventTicketFlow.Data;
+
+DotNetEnv.Env.Load();
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<EventTicketFlow.Data.AppDbContext>(options =>
+    options.UseSqlServer(DotNetEnv.Env.GetString("CONNECTION_STRING")));
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -25,5 +35,19 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+app.MapGet("/db-test", async (AppDbContext db) =>
+{
+    
+    try
+    {
+        await db.Database.ExecuteSqlRawAsync("SELECT 1");
+        return Results.Ok("Database connection successful."); 
+    }
+    catch
+    {
+        return Results.Problem("Database connection failed.");
+    }
+
+});
 
 app.Run();
