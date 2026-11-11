@@ -26,6 +26,10 @@ Steps needed to get sever added to project:
   5. Click connect
 <img width="508" height="715" alt="image" src="https://github.com/user-attachments/assets/c3137082-c169-46e1-975b-35c538cd823f" />
 
+Database test:
+Use this link to verify database connection. Will display "Database connection successful." if connected.
+[https://eventticketflow-bsgph3hjerc2e6dq.westus-01.azurewebsites.net/db-test ](https://eventticketflow-bsgph3hjerc2e6dq.westus-01.azurewebsites.net/db-test)
+
 
 Usage:  
 Access webpage via the URL [eventticketflow-bsgph3hjerc2e6dq.westus-01.azurewebsites.net ](https://eventticketflow-bsgph3hjerc2e6dq.westus-01.azurewebsites.net/)
