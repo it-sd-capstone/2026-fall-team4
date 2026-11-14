@@ -1,10 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
 using EventTicketFlow.Data;
+using Microsoft.AspNetCore.Identity;
 
 DotNetEnv.Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("AppDbContext") ?? throw new InvalidOperationException("Connection string 'AppDbContext' not found.");
 
 builder.Services.AddDbContext<EventTicketFlow.Data.AppDbContext>(options =>
     options.UseSqlServer(DotNetEnv.Env.GetString("CONNECTION_STRING")));
@@ -12,6 +14,10 @@ builder.Services.AddDbContext<EventTicketFlow.Data.AppDbContext>(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>();
 
 var app = builder.Build();
 
@@ -26,6 +32,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
@@ -34,6 +41,8 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+
+app.MapRazorPages();
 
 app.MapGet("/db-test", async (AppDbContext db) =>
 {
