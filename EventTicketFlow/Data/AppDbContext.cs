@@ -3,6 +3,13 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventTicketFlow.Data
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+
+namespace EventTicketFlow.Data;
+
+public class AppDbContext : IdentityDbContext<ApplicationUser>
 {
     public class AppDbContext : IdentityDbContext<EventTicketFlowUser>
     {

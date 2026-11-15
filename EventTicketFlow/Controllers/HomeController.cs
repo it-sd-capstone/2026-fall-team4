@@ -1,4 +1,5 @@
 using EventTicketFlow.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -20,6 +21,12 @@ namespace EventTicketFlow.Controllers
 
         public IActionResult Privacy()
         {
+            // Temporary test messages for layout verification
+            //TempData["ErrorMessage"] = "This is a test error pop-out! Please check your input.";
+            //TempData["SuccessMessage"] = "Your operation was completed successfully!";
+            //TempData["WarningMessage"] = "Notice: The venue capacity is reaching its maximum limit.";
+
+
             return View();
         }
 
@@ -27,6 +34,12 @@ namespace EventTicketFlow.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [Authorize]
+        public IActionResult SecureTest()
+        {
+            return Content("You are authenticated.");
         }
     }
 }
