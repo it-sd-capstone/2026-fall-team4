@@ -1,6 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
 using EventTicketFlow.Data;
+using EventTicketFlow.Models;
+using Microsoft.AspNetCore.Identity;
+using EventTicketFlow.Services;
 using Microsoft.AspNetCore.Identity;
 
 DotNetEnv.Env.Load();
@@ -8,9 +11,12 @@ DotNetEnv.Env.Load();
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("AppDbContext") ?? throw new InvalidOperationException("Connection string 'AppDbContext' not found.");
 
+// Add services to the container.
+builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<EventTicketFlow.Data.AppDbContext>(options =>
     options.UseSqlServer(DotNetEnv.Env.GetString("CONNECTION_STRING")));
 
+builder.Services.AddTransient<TestDataService>();
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<EventTicketFlowContext>();
 
 
@@ -74,5 +80,17 @@ app.MapGet("/db-test", async (AppDbContext db) =>
     }
 
 });
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await dbContext.Database.MigrateAsync();
+
+    if (DotNetEnv.Env.GetString("SEED_TEST_DATA") == "true")
+    {
+        var testDataService = scope.ServiceProvider.GetRequiredService<TestDataService>();
+        testDataService.PopulateTestData();
+    }
+}
 
 app.Run();
