@@ -1,17 +1,20 @@
 using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
 using EventTicketFlow.Data;
+using EventTicketFlow.Models;
+using Microsoft.AspNetCore.Identity;
+using EventTicketFlow.Services;
 
 DotNetEnv.Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the container.
+builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<EventTicketFlow.Data.AppDbContext>(options =>
     options.UseSqlServer(DotNetEnv.Env.GetString("CONNECTION_STRING")));
 
-
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddTransient<TestDataService>();
 
 var app = builder.Build();
 
@@ -49,5 +52,17 @@ app.MapGet("/db-test", async (AppDbContext db) =>
     }
 
 });
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await dbContext.Database.MigrateAsync();
+
+    if (DotNetEnv.Env.GetString("SEED_TEST_DATA") == "true")
+    {
+        var testDataService = scope.ServiceProvider.GetRequiredService<TestDataService>();
+        testDataService.PopulateTestData();
+    }
+}
 
 app.Run();
