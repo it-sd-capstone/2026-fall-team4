@@ -6,9 +6,8 @@ namespace EventTicketFlow.Models
     {
         [Key]
         public int Id { get; set; }
-        public int TicketTypeId { get; set; }
+        public Guid CheckinUUID{ get; set; }
         public TicketType? TicketType { get; set; }
-        public int CustomerId { get; set; }
         public Customer? Customer { get; set; }
         public int Quantity { get; set; }
         [Display(Name = "VIP")]
@@ -21,8 +20,6 @@ namespace EventTicketFlow.Models
         public DateTime CreatedDate { get; set; }
         [Display(Name = "Check In Date")]
         public DateTime? CheckInDate { get; set; }
-        [Display(Name = "Confirmation Code")]
-        public string ConfirmationCode { get; set; }
 
     }
 }
