@@ -17,7 +17,6 @@ builder.Services.AddDbContext<EventTicketFlow.Data.AppDbContext>(options =>
     options.UseSqlServer(DotNetEnv.Env.GetString("CONNECTION_STRING")));
 
 builder.Services.AddTransient<TestDataService>();
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<EventTicketFlowContext>();
 
 
 // Add services to the container.
