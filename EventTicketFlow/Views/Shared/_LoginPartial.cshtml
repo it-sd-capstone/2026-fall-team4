@@ -1,0 +1,30 @@
+@using Microsoft.AspNetCore.Identity
+@using EventTicketFlow.Data
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<ul class="nav-links">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li>
+            <a asp-area="Identity" asp-page="/Account/Manage/Index" class="nav-link">Hello @User.Identity?.Name</a>
+        </li>
+
+        <li>
+            <form id="logoutForm" asp-area="Identity" asp-page="/Account/Logout" method="post">
+                <button type="submit" class="nav-link logout-button">Logout</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li>
+            <a asp-area="Identity" asp-page="/Account/Register" class="nav-link">Register</a>
+        </li>
+
+        <li>
+            <a asp-area="Identity" asp-page="/Account/Login" class="nav-link">Login</a>
+        </li>
+    }
+</ul>

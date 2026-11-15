@@ -1,4 +1,5 @@
 using EventTicketFlow.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -33,6 +34,12 @@ namespace EventTicketFlow.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [Authorize]
+        public IActionResult SecureTest()
+        {
+            return Content("You are authenticated.");
         }
     }
 }
