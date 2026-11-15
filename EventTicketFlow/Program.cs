@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using DotNetEnv;
 using EventTicketFlow.Data;
+using Microsoft.AspNetCore.Identity;
 
 DotNetEnv.Env.Load();
 
@@ -8,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<EventTicketFlow.Data.AppDbContext>(options =>
     options.UseSqlServer(DotNetEnv.Env.GetString("CONNECTION_STRING")));
+
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<EventTicketFlowContext>();
 
 
 // Add services to the container.

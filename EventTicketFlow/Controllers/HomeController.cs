@@ -20,6 +20,12 @@ namespace EventTicketFlow.Controllers
 
         public IActionResult Privacy()
         {
+            // Temporary test messages for layout verification
+            //TempData["ErrorMessage"] = "This is a test error pop-out! Please check your input.";
+            //TempData["SuccessMessage"] = "Your operation was completed successfully!";
+            //TempData["WarningMessage"] = "Notice: The venue capacity is reaching its maximum limit.";
+
+
             return View();
         }
 
