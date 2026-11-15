@@ -7,7 +7,9 @@ namespace EventTicketFlow.Models
         [Key]
         public int Id { get; set; }
         public Guid CheckinUUID{ get; set; }
+        public int TicketTypeId { get; set; }
         public TicketType? TicketType { get; set; }
+        public int CustomerId { get; set; }
         public Customer? Customer { get; set; }
         public int Quantity { get; set; }
         [Display(Name = "VIP")]
