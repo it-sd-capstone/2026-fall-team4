@@ -36,10 +36,10 @@ namespace EventTicketFlow.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public IActionResult SecureTest()
         {
-            return Content("You are authenticated.");
+            return Content("Admin access granted.");
         }
     }
 }
