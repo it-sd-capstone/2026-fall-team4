@@ -87,9 +87,29 @@ using (var scope = app.Services.CreateScope())
     // Users will be assigned to the appropriate role
     if (app.Environment.IsDevelopment())
     {
-        await CreateTestUser(userManager, Env.GetString("ADMIN_EMAIL"), Env.GetString("ADMIN_PASSWORD"), "Admin");
-        await CreateTestUser(userManager, Env.GetString("EVENTMANAGER_EMAIL"), Env.GetString("EVENTMANAGER_PASSWORD"), "EventManager");
-        await CreateTestUser(userManager, Env.GetString("CUSTOMER_EMAIL"), Env.GetString("CUSTOMER_PASSWORD"), "Customer");
+        var adminEmail = Env.GetString("ADMIN_EMAIL");
+        var adminPassword = Env.GetString("ADMIN_PASSWORD");
+
+        if (!string.IsNullOrWhiteSpace(adminEmail) && !string.IsNullOrWhiteSpace(adminPassword))
+        {
+            await CreateTestUser(userManager, adminEmail, adminPassword, "Admin");
+        }
+
+        var managerEmail = Env.GetString("EVENTMANAGER_EMAIL");
+        var managerPassword = Env.GetString("EVENTMANAGER_PASSWORD");
+
+        if (!string.IsNullOrWhiteSpace(managerEmail) && !string.IsNullOrWhiteSpace(managerPassword))
+        {
+            await CreateTestUser(userManager, managerEmail, managerPassword, "EventManager");
+        }
+
+        var customerEmail = Env.GetString("CUSTOMER_EMAIL");
+        var customerPassword = Env.GetString("CUSTOMER_PASSWORD");
+
+        if (!string.IsNullOrWhiteSpace(customerEmail) && !string.IsNullOrWhiteSpace(customerPassword))
+        {
+            await CreateTestUser(userManager, customerEmail, customerPassword, "Customer");
+        }
     }
 
     if (DotNetEnv.Env.GetString("SEED_TEST_DATA") == "true")
