@@ -59,34 +59,24 @@ body {
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-a:not(.brand-logo):not(.nav-link):not(.btn) {
+/* Theme-Aware Content Links (Excludes Navbar, Buttons, and Footer Links) */
+a:not(.brand-logo):not(.nav-link):not(.btn):not(.footer-link) {
     color: var(--link-color);
     text-decoration: underline;
     text-underline-offset: 3px;
     transition: color 0.2s ease;
 }
 
-    a:not(.brand-logo):not(.nav-link):not(.btn):hover {
+    a:not(.brand-logo):not(.nav-link):not(.btn):not(.footer-link):hover {
         color: var(--link-hover);
     }
 
+/* Accessible Focus States */
 .btn:focus,
 .btn:active:focus,
 .btn-link.nav-link:focus,
-.form-control:focus,
 .form-check-input:focus {
     box-shadow: 0 0 0 0.1rem var(--bg-body), 0 0 0 0.25rem var(--primary-color);
-}
-
-.form-floating > .form-control-plaintext::placeholder,
-.form-floating > .form-control::placeholder {
-    color: var(--text-muted);
-    text-align: end;
-}
-
-.form-floating > .form-control-plaintext:focus::placeholder,
-.form-floating > .form-control:focus::placeholder {
-    text-align: start;
 }
 
 /* ==========================================================================
@@ -253,11 +243,193 @@ a:not(.brand-logo):not(.nav-link):not(.btn) {
     margin-bottom: 0.5rem;
 }
 
-    .footer-links a {
+    .footer-links a,
+    .footer-link {
         color: var(--text-muted);
         text-decoration: none;
+        transition: color 0.2s;
     }
 
-        .footer-links a:hover {
+        .footer-links a:hover,
+        .footer-link:hover {
             color: var(--text-main);
         }
+
+/* ==========================================================================
+   6. Auth Card & Form Controls (Light/Dark Theme Ready)
+   ========================================================================== */
+.auth-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 1rem;
+}
+
+.auth-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 1.75rem;
+}
+
+    .auth-header h1,
+    .auth-header h2 {
+        margin: 0 0 0.4rem 0;
+        font-size: 1.5rem;
+        color: var(--text-main);
+    }
+
+    .auth-header p {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.45rem;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-main);
+    margin-bottom: 0.45rem;
+}
+
+.form-label-row .form-label {
+    margin-bottom: 0;
+}
+
+.form-label-row a {
+    font-size: 0.825rem;
+}
+
+/* Unified Text Input Styling (Covers both .form-input and scaffolded .form-control) */
+.form-input,
+.form-control {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.65rem 0.85rem;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: var(--text-main);
+    background-color: var(--bg-body);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    text-align: start;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+    .form-input::placeholder,
+    .form-control::placeholder {
+        color: var(--text-muted);
+        text-align: start;
+        opacity: 0.7;
+    }
+
+    .form-input:hover,
+    .form-control:hover {
+        border-color: var(--text-muted);
+    }
+
+    .form-input:focus,
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+    }
+
+.form-check-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+    .form-check-row input[type="checkbox"] {
+        width: 1rem;
+        height: 1rem;
+        accent-color: var(--primary-color);
+        cursor: pointer;
+    }
+
+.btn-primary-full {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+    .btn-primary-full:hover {
+        background-color: var(--primary-hover);
+    }
+
+    .btn-primary-full:active {
+        transform: translateY(1px);
+    }
+
+.auth-footer {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+    .auth-footer p {
+        margin: 0.4rem 0;
+    }
+
+.auth-sublink {
+    font-size: 0.825rem;
+}
+
+.validation-error,
+.text-danger {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 0.825rem;
+    color: var(--danger-color);
+}
+
+.validation-summary.validation-summary-valid,
+.validation-summary:empty {
+    display: none;
+}
+
+.validation-summary ul {
+    list-style: none;
+    padding: 0.75rem 1rem;
+    margin: 0 0 1.25rem 0;
+    background-color: rgba(239, 68, 68, 0.15);
+    border: 1px solid var(--danger-color);
+    border-radius: 6px;
+    color: var(--alert-danger-text);
+    font-size: 0.875rem;
+}
