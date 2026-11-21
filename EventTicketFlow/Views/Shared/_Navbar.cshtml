@@ -7,6 +7,11 @@
             <li><a asp-controller="Home" asp-action="Index" class="nav-link">Discover Events</a></li>
             <li><a asp-controller="Home" asp-action="Privacy" class="nav-link">Privacy</a></li>
             <partial name="_LoginPartial" />
+            <li>
+                <button type="button" id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle light or dark theme" title="Switch Theme">
+                    <span id="theme-icon">☀️</span>
+                </button>
+            </li>
         </ul>
     </nav>
 </header>
