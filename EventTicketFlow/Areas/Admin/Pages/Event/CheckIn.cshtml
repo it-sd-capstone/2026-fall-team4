@@ -1,0 +1,67 @@
+@page
+@model EventTicketFlow.Pages.EventPages.CheckInModel
+
+@{
+    ViewData["Title"] = "Check in - " + Model.EventName;
+}
+
+<div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+    <div>
+        <h1 class="m-0 text-2xl font-semibold">Ticket check-in</h1>
+        <p class="text-(--text-muted)">@Model.EventName</p>
+    </div>
+    <a asp-page="./Index">Back to events</a>
+</div>
+
+<div class="mb-6 flex flex-wrap items-center gap-4">
+    <span><strong>@Model.CheckedIn</strong> checked in</span>
+    <span><strong>@Model.TicketsSold</strong> tickets sold</span>
+</div>
+
+@if (TempData["CheckInMessage"] is string message)
+{
+    <p role="status">@message</p>
+}
+
+<form method="get" class="mb-6 flex flex-wrap items-center gap-4" role="search">
+    <input type="hidden" name="id" value="@Model.EventId" />
+    <label for="search" class="font-medium">Search tickets</label>
+    <input id="search" name="search" type="search" value="@Model.Search" placeholder="Name or email" class="rounded border border-(--border-color) bg-(--bg-card) px-3 py-2 text-(--text-main)" />
+    <label for="status" class="font-medium">Status</label>
+    <select id="status" name="status" class="rounded border border-(--border-color) bg-(--bg-card) px-3 py-2 text-(--text-main)">
+        <option value="all" selected="@(Model.Status == "all")">All</option>
+        <option value="not" selected="@(Model.Status == "not")">Not checked in</option>
+        <option value="checked-in" selected="@(Model.Status == "checked-in")">Checked in</option>
+    </select>
+    <button type="submit" class="cursor-pointer rounded border-0 bg-(--primary-color) px-5 py-2 font-semibold text-white">Search</button>
+</form>
+
+<div class="overflow-x-auto border-t border-(--border-color)">
+    <table class="w-full border-collapse text-left text-sm [&_th]:border-b [&_th]:border-(--border-color) [&_th]:px-3 [&_th]:py-3 [&_th]:font-medium [&_th]:text-(--text-muted) [&_td]:border-b [&_td]:border-(--border-color) [&_td]:px-3 [&_td]:py-3">
+        <thead><tr><th>Customer</th><th>Email</th><th>Tickets</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody>
+        @foreach (var ticket in Model.Tickets)
+        {
+            <tr>
+                <td>@ticket.Name</td>
+                <td>@ticket.Email</td>
+                <td>@ticket.Quantity</td>
+                <td>@(ticket.CheckedIn ? "Checked in" : "Not checked in")</td>
+                <td>
+                    <form method="post" asp-route-id="@Model.EventId">
+                        <input type="hidden" name="ticketId" value="@ticket.Id" />
+                        <input type="hidden" name="checkIn" value="@(!ticket.CheckedIn ? "true" : "false")" />
+                        <input type="hidden" name="search" value="@Model.Search" />
+                        <input type="hidden" name="status" value="@Model.Status" />
+                        <button type="submit" class="cursor-pointer rounded border-0 bg-(--primary-color) px-5 py-2 font-semibold text-white" aria-label="@(ticket.CheckedIn ? "Check out" : "Check in") @ticket.Name, @ticket.Quantity ticket(s)">@(ticket.CheckedIn ? "Check out" : "Check in")</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        @if (Model.Tickets.Count == 0)
+        {
+            <tr><td colspan="5">No tickets found.</td></tr>
+        }
+        </tbody>
+    </table>
+</div>

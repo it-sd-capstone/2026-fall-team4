@@ -1,0 +1,51 @@
+@page
+@model EventTicketFlow.Areas.Admin.Pages.User.IndexModel
+@{
+    ViewData["Title"] = "Users";
+}
+<div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+    <h1 class="m-0 text-2xl font-semibold">Users</h1>
+    <a asp-page="Create" class="rounded bg-(--primary-color) px-5 py-2 font-semibold text-white no-underline hover:bg-(--primary-hover)">Create user</a>
+</div>
+<form method="get" class="mb-6 flex flex-wrap items-center gap-4" role="search">
+    <label for="search" class="font-medium">Search users</label>
+    <input id="search" name="search" type="search" value="@Model.Search" placeholder="Search by username, email, or phone" class="rounded border border-(--border-color) bg-(--bg-card) px-3 py-2 text-(--text-main)" />
+    <button type="submit" class="cursor-pointer rounded border-0 bg-(--primary-color) px-5 py-2 font-semibold text-white">Search</button>
+</form>
+<div class="overflow-x-auto border-t border-(--border-color)">
+    <table class="w-full border-collapse text-left text-sm [&_th]:border-b [&_th]:border-(--border-color) [&_th]:px-3 [&_th]:py-3 [&_th]:font-medium [&_th]:text-(--text-muted) [&_td]:border-b [&_td]:border-(--border-color) [&_td]:px-3 [&_td]:py-3 [&_a]:text-blue-300 [&_a:hover]:text-white">
+        <thead>
+            <tr><th>Username</th><th>Email</th><th>Phone</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>@(string.IsNullOrEmpty(user.PhoneNumber) ? "—" : user.PhoneNumber)</td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@user.Id">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@user.Id">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@user.Id">Delete</a>
+                </td>
+            </tr>
+        }
+        @if (Model.Users.Count == 0)
+        {
+            <tr><td colspan="4">No users found.</td></tr>
+        }
+        </tbody>
+    </table>
+</div>
+<nav aria-label="User pages" class="mt-6 flex flex-wrap items-center gap-4">
+    @if (Model.CurrentPage > 1)
+    {
+        <a asp-page="./Index" asp-route-search="@Model.Search" asp-route-page="@(Model.CurrentPage - 1)">Previous</a>
+    }
+    <span>Page @Model.CurrentPage of @Model.TotalPages</span>
+    @if (Model.CurrentPage < Model.TotalPages)
+    {
+        <a asp-page="./Index" asp-route-search="@Model.Search" asp-route-page="@(Model.CurrentPage + 1)">Next</a>
+    }
+</nav>

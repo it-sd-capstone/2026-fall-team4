@@ -1,4 +1,144 @@
-﻿@{
+﻿@model HomeViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
+
+@* Big Event Card*@
+<section class="big-card">
+    <div class="big-card-heading">
+        <h1>Put a Big Event Here</h1>
+        <p>Put a Big Events Description Here</p>
+    </div>
+
+    @if (Model.FeaturedEvent != null)
+    {
+        <a class="big-card-feature"
+           asp-controller="Event"
+           asp-action="Details"
+           asp-route-id="@Model.FeaturedEvent.Id">
+           <div class="big-card-image">
+               <span class="event-status event-status-@Model.FeaturedEvent.Status">Featured</span>
+           </div>
+
+           <div class="big-card-info">
+               <span class="big-card-label">@Model.FeaturedEvent.StatusText</span>
+               <h2>@Model.FeaturedEvent.EventName</h2>
+               <p>@Model.FeaturedEvent.EventDescription</p>
+               <p>@Model.FeaturedEvent.DateText</p>
+               <p>@Model.FeaturedEvent.PriceText</p>
+               <span>View Event <span hidden="true"></span></span>
+           </div>
+        </a>
+    }
+</section>
+
+@*Search and filtering*@
+<section class="event-search">
+
+    <div class="search-header">
+        <h2>Search Events</h2>
+        <p class="result-count"> @Model.Events.Count events found</p>
+    </div>
+
+    <form asp-controller="Home" asp-action="Index" method="get">
+
+        <input type="search" name="searchTerm" value="@Model.SearchTerm" placeholder="Search for events here"/>
+
+        <select asp-for="Price">
+            <option value="">Any Price</option>
+            <option value="under25">Under $25</option>
+            <option value="25to75">$25 - $75</option>
+            <option value="over75">Over $75</option>
+        </select>
+
+        <select asp-for="Sort">
+            <option value="">Date (Soonest)</option>
+            <option value="priceLowToHigh">Price: Low to High</option>
+            <option value="priceHighToLow">Price: High to Low</option>
+            <option value="name">Name</option>
+            
+        </select>
+
+            @* This input keeps the pill from getting 'lost' *@
+            <input type="hidden" name="status" value="@Model.Status" />
+            <button type="submit">Search</button>
+
+        @if (Model.HasFilters)
+            {
+                <a asp-controller="Home" asp-action="Index">Clear Filters</a>
+            }
+
+    </form>
+
+    <div class="filter-pills">
+
+        <a asp-action="Index" 
+            asp-route-searchTerm="@Model.SearchTerm"
+            asp-route-price="@Model.Price"
+            asp-route-sort="@Model.Sort"
+           class="filter-pill @(Model.Status == null ? "active" : "")">All</a>
+            
+        <a asp-action="Index"
+            asp-route-status="open"
+            asp-route-searchTerm="@Model.SearchTerm"
+            asp-route-price="@Model.Price"
+            asp-route-sort="@Model.Sort"
+           class="filter-pill @(Model.Status == "open" ? "active" : "")">Available</a>
+
+        <a asp-action="Index"
+           asp-route-status="upcoming"
+           asp-route-searchTerm="@Model.SearchTerm"
+           asp-route-price="@Model.Price"
+           asp-route-sort="@Model.Sort"
+           class="filter-pill @(Model.Status == "upcoming" ? "active" : "")">Upcoming</a>
+
+        <a asp-action="Index"
+            asp-route-status="closed"
+            asp-route-searchTerm="@Model.SearchTerm"
+            asp-route-price="@Model.Price"
+            asp-route-sort="@Model.Sort"
+            class="filter-pill @(Model.Status == "closed" ? "active" : "")">Closed</a>
+
+    </div>
+</section>
+
+<hr />
+
+@*Event cards*@
+
+@if (Model.Events.Count == 0)
+{
+    <p>No events match your criteria</p>
+}
+else
+{
+    <div class="event-grid">
+        @foreach (EventCardViewModel card in Model.Events)
+        {
+            <a class="event-card"
+            asp-controller="Event"
+            asp-action="Details"
+            asp-route-id="@card.Id">
+
+            <div class="event-card-image">
+                <span class="event-status event-status-@card.Status">@card.StatusText</span>
+            </div>
+
+            <div class="event-card-title">
+                <h3 class="event-title">@card.EventName</h3>
+                    <span class="event-card-arrow" aria-hidden="true">→</span>
+            </div>
+
+            <p class="event-card-description">@card.EventDescription</p>
+            <p class="event-card-date">@card.DateText</p>
+            <p class="event-card-price">@card.PriceText</p>
+            </a>
+        }
+    </div>
+}
+
+@*Footer*@
+<div class="footer">
+    <p>Test Text - Maybe we just have credits or copyright information</p>
+</div>
 @* This page will display information about all public and open events. It will not show tickets to purchase or long details about the events, just a short breif about the event to let the user decide if they want to click on the event to see more information. The events will be displayed in a list format with the most recent events at the top of the page. Each event will have a link to the event details page where users can see more information about the event and purchase tickets if available. *@

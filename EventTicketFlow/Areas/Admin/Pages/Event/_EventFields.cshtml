@@ -1,0 +1,65 @@
+@model EventTicketFlow.Models.Event
+
+<div class="grid gap-5">
+    <div class="grid gap-2 md:grid-cols-[12rem_1fr] md:items-start">
+        <label asp-for="EventName" class="font-medium md:pt-3"></label>
+        <div>
+            <input asp-for="EventName" maxlength="100" required aria-label="Event Name"
+                   aria-describedby="event-name-error" placeholder="Enter the name of the event"
+                   class="w-full box-border rounded border border-(--border-color) bg-(--bg-card) px-3 py-2 text-(--text-main) focus:outline-2 focus:outline-offset-2 focus:outline-(--primary-color)" />
+            <span id="event-name-error" asp-validation-for="EventName" class="mt-1 block text-sm text-red-300"></span>
+        </div>
+    </div>
+    <div class="grid gap-2 md:grid-cols-[12rem_1fr] md:items-start">
+        <label asp-for="EventDescription" class="font-medium md:pt-3"></label>
+        <div>
+            <textarea asp-for="EventDescription" rows="4" required aria-label="Event Description"
+                      aria-describedby="event-description-error" placeholder="Describe the event"
+                      class="w-full box-border rounded border border-(--border-color) bg-(--bg-card) px-3 py-2 resize-y text-(--text-main) focus:outline-2 focus:outline-offset-2 focus:outline-(--primary-color)">
+            </textarea>
+            <span id="event-description-error" asp-validation-for="EventDescription"
+                  class="mt-1 block text-sm text-red-300">
+            </span>
+        </div>
+    </div>
+    <div class="grid gap-2 md:grid-cols-[12rem_1fr] md:items-start">
+        <label asp-for="EventCreated" class="font-medium md:pt-3"></label>
+        <div>
+            <input asp-for="EventCreated" required aria-label="Event Created" aria-describedby="event-created-error"
+                   placeholder="Select the creation date and time"
+                   class="w-full box-border rounded border border-(--border-color) bg-(--bg-card) px-3 py-2 text-(--text-main) focus:outline-2 focus:outline-offset-2 focus:outline-(--primary-color)" />
+            <span id="event-created-error" asp-validation-for="EventCreated" class="mt-1 block text-sm text-red-300">
+            </span>
+        </div>
+    </div>
+    <div class="grid gap-2 md:grid-cols-[12rem_1fr] md:items-start">
+        <label asp-for="OpenDate" class="font-medium md:pt-3"></label>
+        <div>
+            <input asp-for="OpenDate" required aria-label="Open Date" aria-describedby="open-date-error"
+                   placeholder="Select the opening date and time"
+                   class="w-full box-border rounded border border-(--border-color) bg-(--bg-card) px-3 py-2 text-(--text-main) focus:outline-2 focus:outline-offset-2 focus:outline-(--primary-color)" />
+            <span id="open-date-error" asp-validation-for="OpenDate" class="mt-1 block text-sm text-red-300">
+            </span>
+        </div>
+    </div>
+    <div class="grid gap-2 md:grid-cols-[12rem_1fr] md:items-start">
+        <label asp-for="CloseDate" class="font-medium md:pt-3"></label>
+        <div>
+            <input asp-for="CloseDate" required aria-label="Close Date" aria-describedby="close-date-error"
+                   placeholder="Select the closing date and time"
+                   class="w-full box-border rounded border border-(--border-color) bg-(--bg-card) px-3 py-2 text-(--text-main) focus:outline-2 focus:outline-offset-2 focus:outline-(--primary-color)" />
+            <span id="close-date-error" asp-validation-for="CloseDate" class="mt-1 block text-sm text-red-300">
+            </span>
+        </div>
+    </div>
+    <div class="grid gap-2 md:grid-cols-[12rem_1fr] md:items-start">
+        <label asp-for="MaxTickets" class="font-medium md:pt-3"></label>
+        <div>
+            <input asp-for="MaxTickets" min="1" step="1" required aria-label="Max Tickets"
+                   aria-describedby="max-tickets-error" placeholder="Enter the maximum number of tickets"
+                   class="w-full box-border rounded border border-(--border-color) bg-(--bg-card) px-3 py-2 text-(--text-main) focus:outline-2 focus:outline-offset-2 focus:outline-(--primary-color)" />
+            <span id="max-tickets-error" asp-validation-for="MaxTickets" class="mt-1 block text-sm text-red-300">
+            </span>
+        </div>
+    </div>
+</div>

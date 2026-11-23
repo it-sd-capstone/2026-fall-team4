@@ -16,10 +16,14 @@ builder.Services.AddDbContext<EventTicketFlow.Data.AppDbContext>(options =>
     options.UseSqlServer(DotNetEnv.Env.GetString("CONNECTION_STRING")));
 
 builder.Services.AddTransient<TestDataService>();
+builder.Services.AddTransient<EventService>();
 
 
 // Add services to the container.
-builder.Services.AddRazorPages();
+builder.Services.AddAuthorization(options =>
+    options.AddPolicy("Admin", policy => policy.RequireRole("Admin")));
+builder.Services.AddRazorPages(options =>
+    options.Conventions.AuthorizeAreaFolder("Admin", "/", "Admin"));
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>();
