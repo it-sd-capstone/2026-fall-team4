@@ -18,13 +18,16 @@ namespace EventTicketFlow.Controllers
             _eventService = eventService;
         }
 
-        public IActionResult Index(string? searchTerm)
+        public IActionResult Index(string? searchTerm, string? status, string? price, string? sort)
         {
             HomeViewModel model = new();
 
             model.SearchTerm = searchTerm;
+            model.Status = status;
+            model.Price = price;
+            model.Sort = sort;
 
-            model.Events = _eventService.SearchEvents(searchTerm);
+            model.Events = _eventService.SearchEvents(searchTerm, status, price, sort);
 
             return View(model);
         }

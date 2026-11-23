@@ -6,23 +6,76 @@
 <section class="event-search">
     <form asp-controller="Home" asp-action="Index" method="get">
 
-        <input type="search" name="searchTerm" value="@Model.SearchTerm" placeholder="Serach for events here"/>
+        <input type="search" name="searchTerm" value="@Model.SearchTerm" placeholder="Search for events here"/>
 
+        <select asp-for="Price">
+            <option value="">Any Price</option>
+            <option value="under25">Under $25</option>
+            <option value="25to75">$25 - $75</option>
+            <option value="over75">Over $75</option>
+        </select>
+
+        <select asp-for="Sort">
+            <option value="">Date (Soonest)...</option>
+            <option value="priceLowToHigh">Price: Low to High</option>
+            <option value="priceHighToLow">Price: High to Low</option>
+            <option value="name">Name</option>
+            
+        </select>
+
+            @* This input keeps the pill from getting 'lost' *@
+            <input type="hidden" name="status" value="@Model.Status" />
             <button type="submit">Search</button>
+
+        @if (Model.HasFilters)
+            {
+                <a asp-controller="Home" asp-action="Index">Clear Filters</a>
+            }
+
+    </form>
+
+    <div class="filter-pills">
+
+        <a asp-action="Index" 
+            asp-route-searchTerm="@Model.SearchTerm"
+            asp-route-price="@Model.Price"
+            asp-route-sort="@Model.Sort"
+           class="filter-pill @(Model.Status == null ? "active" : "")">All</a>
+            
+        <a asp-action="Index"
+            asp-route-status="open"
+            asp-route-searchTerm="@Model.SearchTerm"
+            asp-route-price="@Model.Price"
+            asp-route-sort="@Model.Sort"
+           class="filter-pill @(Model.Status == "open" ? "active" : "")">Available</a>
+
+        <a asp-action="Index"
+           asp-route-status="upcoming"
+           asp-route-searchTerm="@Model.SearchTerm"
+           asp-route-price="@Model.Price"
+           asp-route-sort="@Model.Sort"
+           class="filter-pill @(Model.Status == "upcoming" ? "active" : "")">Upcoming</a>
+
+        <a asp-action="Index"
+            asp-route-status="closed"
+            asp-route-searchTerm="@Model.SearchTerm"
+            asp-route-price="@Model.Price"
+            asp-route-sort="@Model.Sort"
+            class="filter-pill @(Model.Status == "closed" ? "active" : "")">Closed</a>
 
         @if (!string.IsNullOrWhiteSpace(Model.SearchTerm))
             {
                 <a asp-controller="Home" asp-action="Index">Clear</a>
             }
         
-        </form>
+    </div>
 </section>
 
 <p>@Model.Events.Count events found</p>
 
     @if (Model.Events.Count == 0)
 {
-    <p>There were no events found for "@Model.SearchTerm"</p>
+    <p>No events match your criteria</p>
 }
 else
 {
