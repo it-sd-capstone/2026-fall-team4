@@ -92,8 +92,8 @@ namespace EventTicketFlow.Services
 
             Event event5 = new Event();
             event5.CreatedBy = "admin";
-            event5.EventName = "Professional Tortise Race";
-            event5.EventDescription = "A day of competitive tortise racing.";
+            event5.EventName = "Professional Tortoise Race";
+            event5.EventDescription = "A day of competitive tortoise racing.";
             event5.EventCreated = new DateTime(2026, 11, 20);
             event5.OpenDate = new DateTime(2027, 3, 19);
             event5.CloseDate = new DateTime(2027, 4, 19);

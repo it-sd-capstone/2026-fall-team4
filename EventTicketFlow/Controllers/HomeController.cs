@@ -2,6 +2,7 @@ using EventTicketFlow.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using EventTicketFlow.Services;
 
 namespace EventTicketFlow.Controllers
 {
@@ -9,14 +10,31 @@ namespace EventTicketFlow.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly EventService _eventService;
+
+        public HomeController(ILogger<HomeController> logger, EventService eventService)
         {
             _logger = logger;
+            _eventService = eventService;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string? searchTerm, string? status, string? price, string? sort)
         {
-            return View();
+            HomeViewModel model = new();
+
+            model.SearchTerm = searchTerm;
+            model.Status = status;
+            model.Price = price;
+            model.Sort = sort;
+
+            model.Events = _eventService.SearchEvents(searchTerm, status, price, sort);
+
+            if (!model.HasFilters)
+            {
+                model.FeaturedEvent = _eventService.GetFeaturedEvent();
+            }
+
+            return View(model);
         }
 
         public IActionResult Privacy()
