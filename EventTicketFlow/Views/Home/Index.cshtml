@@ -1,4 +1,36 @@
-﻿@{
+﻿@model HomeViewModel
+@{
     ViewData["Title"] = "Home Page";
+}
+
+<section class="event-search">
+    <form asp-controller="Home" asp-action="Index" method="get">
+
+        <input type="search" name="searchTerm" value="@Model.SearchTerm" placeholder="Serach for events here"/>
+
+            <button type="submit">Search</button>
+
+        @if (!string.IsNullOrWhiteSpace(Model.SearchTerm))
+            {
+                <a asp-controller="Home" asp-action="Index">Clear</a>
+            }
+        
+        </form>
+</section>
+
+<p>@Model.Events.Count events found</p>
+
+    @if (Model.Events.Count == 0)
+{
+    <p>There were no events found for "@Model.SearchTerm"</p>
+}
+else
+{
+    <ul>
+        @foreach (Event e in Model.Events)
+        {
+            <li>@e.EventName</li>
+        }
+    </ul>
 }
 @* This page will display information about all public and open events. It will not show tickets to purchase or long details about the events, just a short breif about the event to let the user decide if they want to click on the event to see more information. The events will be displayed in a list format with the most recent events at the top of the page. Each event will have a link to the event details page where users can see more information about the event and purchase tickets if available. *@
