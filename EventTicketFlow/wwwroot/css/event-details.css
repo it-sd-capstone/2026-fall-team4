@@ -65,12 +65,6 @@
     border-bottom: 1px solid var(--border-color);
 }
 
-.ticket-option {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-}
-
 .page-links {
     margin-bottom: 1rem;
 }
@@ -111,4 +105,47 @@
     .event-image-placeholder {
         height: 250px;
     }
+}
+
+.sold-out-button {
+    background-color: var(--danger-color);
+    cursor: not-allowed;
+    opacity: 0.75;
+}
+
+.sold-out-button:hover {
+    background-color: var(--danger-color);
+}
+
+.ticket-option {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.ticket-option-title {
+    align-items: center;
+    display: flex;
+    flex: 1;
+    gap: .5rem;
+}
+
+.ticket-option p {
+    margin: 0;
+}
+
+.ticket-price {
+    font-weight: 600;
+    min-width: 50px;
+    text-align: right;
+}
+.input.ticket-price {
+    width: 100px;
+}
+
+.quantity-required-button {
+    cursor: not-allowed;
+    opacity: 0.75;
+    background-color: var(--warning-color);
 }

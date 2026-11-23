@@ -42,6 +42,21 @@ public class EventController : Controller
         // Pass ticket pricing information from database to view
         ViewBag.TicketType = ticketType;
 
+        int ticketsSold = 0;
+
+        if (ticketType != null)
+        {
+
+            // Collect number of tickets sold for each ticket type
+            ticketsSold = await _context.PurchasedTickets
+                .Where(p => p.TicketTypeId == ticketType.Id)
+                .SumAsync(p => p.Quantity);
+        }
+
+        // Pass ticket sold information from database to view
+        ViewBag.TicketsSold = ticketsSold;
+        ViewBag.TicketsRemaining = eventItem.MaxTickets - ticketsSold;
+
         return View(eventItem);
     }
 
