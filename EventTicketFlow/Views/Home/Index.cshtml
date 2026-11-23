@@ -16,7 +16,7 @@
         </select>
 
         <select asp-for="Sort">
-            <option value="">Date (Soonest)...</option>
+            <option value="">Date (Soonest)</option>
             <option value="priceLowToHigh">Price: Low to High</option>
             <option value="priceHighToLow">Price: High to Low</option>
             <option value="name">Name</option>
@@ -63,11 +63,6 @@
             asp-route-sort="@Model.Sort"
             class="filter-pill @(Model.Status == "closed" ? "active" : "")">Closed</a>
 
-        @if (!string.IsNullOrWhiteSpace(Model.SearchTerm))
-            {
-                <a asp-controller="Home" asp-action="Index">Clear</a>
-            }
-        
     </div>
 </section>
 
