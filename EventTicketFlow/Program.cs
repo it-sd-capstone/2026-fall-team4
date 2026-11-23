@@ -19,7 +19,10 @@ builder.Services.AddTransient<TestDataService>();
 
 
 // Add services to the container.
-builder.Services.AddRazorPages();
+builder.Services.AddAuthorization(options =>
+    options.AddPolicy("Admin", policy => policy.RequireRole("Admin")));
+builder.Services.AddRazorPages(options =>
+    options.Conventions.AuthorizeAreaFolder("Admin", "/", "Admin"));
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>();
