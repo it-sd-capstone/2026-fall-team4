@@ -29,6 +29,11 @@ namespace EventTicketFlow.Controllers
 
             model.Events = _eventService.SearchEvents(searchTerm, status, price, sort);
 
+            if (!model.HasFilters)
+            {
+                model.FeaturedEvent = _eventService.GetFeaturedEvent();
+            }
+
             return View(model);
         }
 

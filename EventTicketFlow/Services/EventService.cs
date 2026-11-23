@@ -12,14 +12,14 @@ namespace EventTicketFlow.Services
             _context = context;
         }
 
-        public List<Event> SearchEvents(string? searchTerm, string? status, string? price, string? sort)
+        public List<EventCardViewModel> SearchEvents(string? searchTerm, string? status, string? price, string? sort)
         {
             var events = _context.Events.AsQueryable();
 
             DateTime now = DateTime.Now;
 
 
-            // Filter for event status
+            // Search by event name or description
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 string term = searchTerm.Trim();
@@ -27,6 +27,8 @@ namespace EventTicketFlow.Services
                 events = events.Where(e => e.EventName.Contains(term) ||
                          e.EventDescription.Contains(term));
             }
+
+            // Filter for event status
             if (status == "open")
             {
                 events = events.Where(e => e.OpenDate <= now && e.CloseDate >= now);
@@ -39,11 +41,11 @@ namespace EventTicketFlow.Services
             {
                 events = events.Where(e => e.CloseDate < now);
             }
-            
+
             // Filter by price range
             if (price == "under25")
             {
-                events = events.Where( e=> _context.TicketTypes.Any(t => t.EventId == 
+                events = events.Where(e => _context.TicketTypes.Any(t => t.EventId ==
                                        e.Id && t.GeneralPrice < 25));
             }
             else if (price == "25to75")
@@ -79,7 +81,39 @@ namespace EventTicketFlow.Services
                 events = events.OrderBy(e => e.OpenDate);
             }
 
-            return events.ToList();
+            return ToCards(events).ToList();
         }
+
+        // For the big event card on top of home page
+        public EventCardViewModel? GetFeaturedEvent()
+        {
+            DateTime now = DateTime.Now;
+
+            var openEvents = _context.Events.Where(e => e.OpenDate <= now && e.CloseDate >= now)
+                .OrderBy(e => e.CloseDate);
+
+            return ToCards(openEvents).FirstOrDefault();
+        }
+
+
+
+        // Makes the events cards
+        private IQueryable<EventCardViewModel> ToCards(IQueryable<Event> events)
+        {
+            return events.Select(e => new EventCardViewModel
+            {
+                Id = e.Id,
+                EventName = e.EventName,
+                EventDescription = e.EventDescription,
+                OpenDate = e.OpenDate,
+                CloseDate = e.CloseDate,
+                GeneralPrice = _context.TicketTypes
+                    .Where(t => t.EventId == e.Id)
+                    .Select(t => (decimal?)t.GeneralPrice)
+                    .FirstOrDefault()
+            });
+
+        }
+        
     }
 }
