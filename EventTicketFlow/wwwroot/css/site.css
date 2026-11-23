@@ -55,8 +55,19 @@ body {
     padding: 0;
     background-color: var(--bg-body);
     color: var(--text-main);
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Oxygen,
+        Ubuntu,
+        Cantarell,
+        sans-serif;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
 }
 
 /* Theme-Aware Content Links (Excludes Navbar, Buttons, and Footer Links) */
@@ -67,16 +78,18 @@ a:not(.brand-logo):not(.nav-link):not(.btn):not(.footer-link) {
     transition: color 0.2s ease;
 }
 
-    a:not(.brand-logo):not(.nav-link):not(.btn):not(.footer-link):hover {
-        color: var(--link-hover);
-    }
+a:not(.brand-logo):not(.nav-link):not(.btn):not(.footer-link):hover {
+    color: var(--link-hover);
+}
 
 /* Accessible Focus States */
 .btn:focus,
 .btn:active:focus,
 .btn-link.nav-link:focus,
 .form-check-input:focus {
-    box-shadow: 0 0 0 0.1rem var(--bg-body), 0 0 0 0.25rem var(--primary-color);
+    box-shadow:
+        0 0 0 0.1rem var(--bg-body),
+        0 0 0 0.25rem var(--primary-color);
 }
 
 /* ==========================================================================
@@ -144,10 +157,10 @@ a:not(.brand-logo):not(.nav-link):not(.btn):not(.footer-link) {
     transition: color 0.2s;
 }
 
-    .nav-link:hover,
-    .nav-link.active {
-        color: var(--text-main);
-    }
+.nav-link:hover,
+.nav-link.active {
+    color: var(--text-main);
+}
 
 .logout-button {
     background: none;
@@ -169,12 +182,14 @@ a:not(.brand-logo):not(.nav-link):not(.btn):not(.footer-link) {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s, border-color 0.2s;
+    transition:
+        background-color 0.2s,
+        border-color 0.2s;
 }
 
-    .theme-toggle-btn:hover {
-        background-color: rgba(148, 163, 184, 0.15);
-    }
+.theme-toggle-btn:hover {
+    background-color: rgba(148, 163, 184, 0.15);
+}
 
 /* ==========================================================================
    4. Announcement & Error Pop-out Alerts
@@ -243,17 +258,17 @@ a:not(.brand-logo):not(.nav-link):not(.btn):not(.footer-link) {
     margin-bottom: 0.5rem;
 }
 
-    .footer-links a,
-    .footer-link {
-        color: var(--text-muted);
-        text-decoration: none;
-        transition: color 0.2s;
-    }
+.footer-links a,
+.footer-link {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+}
 
-        .footer-links a:hover,
-        .footer-link:hover {
-            color: var(--text-main);
-        }
+.footer-links a:hover,
+.footer-link:hover {
+    color: var(--text-main);
+}
 
 /* ==========================================================================
    6. Auth Card & Form Controls (Light/Dark Theme Ready)
@@ -280,18 +295,18 @@ a:not(.brand-logo):not(.nav-link):not(.btn):not(.footer-link) {
     margin-bottom: 1.75rem;
 }
 
-    .auth-header h1,
-    .auth-header h2 {
-        margin: 0 0 0.4rem 0;
-        font-size: 1.5rem;
-        color: var(--text-main);
-    }
+.auth-header h1,
+.auth-header h2 {
+    margin: 0 0 0.4rem 0;
+    font-size: 1.5rem;
+    color: var(--text-main);
+}
 
-    .auth-header p {
-        margin: 0;
-        color: var(--text-muted);
-        font-size: 0.9rem;
-    }
+.auth-header p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
 
 .form-group {
     margin-bottom: 1.25rem;
@@ -333,27 +348,30 @@ a:not(.brand-logo):not(.nav-link):not(.btn):not(.footer-link) {
     border: 1px solid var(--border-color);
     border-radius: 6px;
     text-align: start;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
 }
 
-    .form-input::placeholder,
-    .form-control::placeholder {
-        color: var(--text-muted);
-        text-align: start;
-        opacity: 0.7;
-    }
+.form-input::placeholder,
+.form-control::placeholder {
+    color: var(--text-muted);
+    text-align: start;
+    opacity: 0.7;
+}
 
-    .form-input:hover,
-    .form-control:hover {
-        border-color: var(--text-muted);
-    }
+.form-input:hover,
+.form-control:hover {
+    border-color: var(--text-muted);
+}
 
-    .form-input:focus,
-    .form-control:focus {
-        outline: none;
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
-    }
+.form-input:focus,
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+}
 
 .form-check-row {
     display: flex;
@@ -365,12 +383,12 @@ a:not(.brand-logo):not(.nav-link):not(.btn):not(.footer-link) {
     cursor: pointer;
 }
 
-    .form-check-row input[type="checkbox"] {
-        width: 1rem;
-        height: 1rem;
-        accent-color: var(--primary-color);
-        cursor: pointer;
-    }
+.form-check-row input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--primary-color);
+    cursor: pointer;
+}
 
 .btn-primary-full {
     width: 100%;
@@ -382,16 +400,18 @@ a:not(.brand-logo):not(.nav-link):not(.btn):not(.footer-link) {
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
+    transition:
+        background-color 0.2s ease,
+        transform 0.1s ease;
 }
 
-    .btn-primary-full:hover {
-        background-color: var(--primary-hover);
-    }
+.btn-primary-full:hover {
+    background-color: var(--primary-hover);
+}
 
-    .btn-primary-full:active {
-        transform: translateY(1px);
-    }
+.btn-primary-full:active {
+    transform: translateY(1px);
+}
 
 .auth-footer {
     margin-top: 1.5rem;
@@ -402,9 +422,9 @@ a:not(.brand-logo):not(.nav-link):not(.btn):not(.footer-link) {
     color: var(--text-muted);
 }
 
-    .auth-footer p {
-        margin: 0.4rem 0;
-    }
+.auth-footer p {
+    margin: 0.4rem 0;
+}
 
 .auth-sublink {
     font-size: 0.825rem;
@@ -432,4 +452,153 @@ a:not(.brand-logo):not(.nav-link):not(.btn):not(.footer-link) {
     border-radius: 6px;
     color: var(--alert-danger-text);
     font-size: 0.875rem;
+}
+
+/* ==========================================================================
+   7. Home Page
+   ========================================================================== */
+/* ----- Big card (featured event) ----- */
+.big-card {
+    margin-bottom: 2.5rem;
+}
+
+.big-card-heading h1 {
+    font-size: 2.5rem;
+    margin: 0;
+}
+
+.big-card-heading p {
+    color: var(--text-muted);
+    margin: 0.5rem 0 1.5rem;
+}
+
+.big-card-feature {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    color: var(--text-main);
+    text-decoration: none;
+}
+
+.big-card-image {
+    position: relative;
+    min-height: 280px;
+    background-color: var(--border-color);
+}
+
+.big-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.5rem;
+    background-color: var(--bg-card);
+}
+
+.big-card-info h2 {
+    font-size: 2rem;
+    margin: 0;
+}
+
+.big-card-link {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+    text-align: right;
+}
+
+@media (max-width: 768px) {
+    .big-card-feature {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ----- Search & filters ----- */
+.search-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.event-search form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 1rem 0;
+}
+
+.filter-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+/* ----- Event cards ----- */
+.event-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.event-card {
+    color: var(--text-main);
+    text-decoration: none;
+    transition: transform 0.2s;
+}
+
+.event-card:hover {
+    transform: translateY(-3px);
+}
+
+.event-card-image {
+    position: relative;
+    height: 180px;
+    border-radius: 8px;
+    background-color: var(--border-color);
+}
+
+.event-status {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.8rem;
+}
+
+/* Row that holds the title and the arrow */
+.event-card-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+/* The h3 inside that row */
+.event-title {
+    font-size: 1.15rem;
+    margin: 0;
+}
+
+.event-card-description,
+.event-card-date {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin: 0.25rem 0;
+}
+
+.event-card-price {
+    font-weight: 700;
+    margin: 0.5rem 0 0;
+}
+
+/* ----- Bottom of page ----- */
+.footer {
+    margin-top: 2.5rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
 }

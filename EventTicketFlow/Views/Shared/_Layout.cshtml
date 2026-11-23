@@ -11,6 +11,10 @@
         })();
     </script>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/tailwind.css" asp-append-version="true" />
+
+    @* Allows views to use page specific stylesheets*@
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     <div class="app-container">

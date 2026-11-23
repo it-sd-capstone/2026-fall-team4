@@ -1,0 +1,64 @@
+@page
+@model EventTicketFlow.Areas.Admin.Pages.User.CreateModel
+@{
+    ViewData["Title"] = "Create user";
+}
+<section class="mx-auto max-w-3xl">
+    <a asp-page="./Index" class="text-sm font-medium text-(--text-muted) hover:text-(--text-main)">&larr; Back to users</a>
+    <h1 class="mt-5 mb-1 text-2xl font-semibold">Create user</h1>
+    <form method="post" class="mt-6 border-t border-(--border-color) pt-6">
+        <div asp-validation-summary="ModelOnly" class="mb-4 text-sm text-red-300" role="alert"></div>
+        <div class="grid gap-5">
+            <div class="grid gap-2">
+                <label asp-for="Input.Email" class="font-medium"></label>
+                <input asp-for="Input.Email" autocomplete="email" required class="rounded border border-(--border-color) bg-(--bg-card) px-3 py-2 text-(--text-main)" />
+                <span asp-validation-for="Input.Email" class="text-sm text-red-300"></span>
+            </div>
+            <div class="grid gap-2">
+                <label asp-for="Input.PhoneNumber" class="font-medium"></label>
+                <input asp-for="Input.PhoneNumber" autocomplete="tel" class="rounded border border-(--border-color) bg-(--bg-card) px-3 py-2 text-(--text-main)" />
+                <span asp-validation-for="Input.PhoneNumber" class="text-sm text-red-300"></span>
+            </div>
+            <div class="grid gap-2">
+                <label asp-for="Input.Password" class="font-medium"></label>
+                <input asp-for="Input.Password" autocomplete="new-password" required class="rounded border border-(--border-color) bg-(--bg-card) px-3 py-2 text-(--text-main)" />
+                <span asp-validation-for="Input.Password" class="text-sm text-red-300"></span>
+                <p class="text-sm text-(--text-muted)">The password must meet the configured Identity password requirements.</p>
+            </div>
+            <div class="grid gap-2">
+                <label asp-for="Input.ConfirmPassword" class="font-medium"></label>
+                <input asp-for="Input.ConfirmPassword" autocomplete="new-password" required class="rounded border border-(--border-color) bg-(--bg-card) px-3 py-2 text-(--text-main)" />
+                <span asp-validation-for="Input.ConfirmPassword" class="text-sm text-red-300"></span>
+            </div>
+            <fieldset class="grid gap-3">
+                <legend class="font-medium">Permissions</legend>
+                @if (Model.AvailableRoles.Count == 0)
+                {
+                    <p class="text-sm text-(--text-muted)">No permissions are currently configured.</p>
+                }
+                else
+                {
+                    <div class="flex flex-wrap gap-4">
+                        @foreach (var role in Model.AvailableRoles)
+                        {
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" name="Input.SelectedRoles" value="@role"
+                                       checked="@(Model.Input.SelectedRoles.Contains(role, StringComparer.Ordinal))"
+                                       class="accent-(--primary-color)" />
+                                <span>@role</span>
+                            </label>
+                        }
+                    </div>
+                }
+            </fieldset>
+        </div>
+        <div class="mt-8 flex flex-wrap items-center gap-4 border-t border-(--border-color) pt-6">
+            <button type="submit" class="cursor-pointer rounded border-0 bg-(--primary-color) px-5 py-2 font-semibold text-white hover:bg-(--primary-hover)">Create user</button>
+            <a asp-page="./Index" class="text-sm font-medium text-(--text-muted) hover:text-(--text-main)">Cancel</a>
+        </div>
+    </form>
+</section>
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
