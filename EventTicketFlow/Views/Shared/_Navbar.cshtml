@@ -1,11 +1,17 @@
 ﻿<header class="site-header">
     <nav class="nav-bar">
-        <a asp-controller="Home" asp-action="Index" class="brand-logo">
+        <a asp-area="" asp-controller="Home" asp-action="Index" class="brand-logo">
             🎟️ Event Ticket Flow
         </a>
         <ul class="nav-links">
-            <li><a asp-controller="Home" asp-action="Index" class="nav-link">Discover Events</a></li>
-            <li><a asp-controller="Home" asp-action="Privacy" class="nav-link">Privacy</a></li>
+            <li><a asp-area="" asp-controller="Home" asp-action="Index" class="nav-link">Discover Events</a></li>
+            <li><a asp-area="" asp-controller="Home" asp-action="Privacy" class="nav-link">Privacy</a></li>
+            @if (User.IsInRole("Admin"))
+            {
+                <li>
+                    <a asp-area="Admin" asp-page="/Index" class="nav-link">Admin Index</a>
+                </li>
+            }
             <partial name="_LoginPartial" />
         </ul>
     </nav>

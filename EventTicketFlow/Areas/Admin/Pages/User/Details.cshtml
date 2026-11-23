@@ -1,0 +1,21 @@
+@page
+@model EventTicketFlow.Areas.Admin.Pages.User.DetailsModel
+@{
+    ViewData["Title"] = "User details";
+}
+<section class="mx-auto max-w-3xl">
+    <h1 class="text-2xl font-semibold">User details</h1>
+    <dl class="mt-6 grid gap-x-6 gap-y-3 border-t border-(--border-color) pt-6 md:grid-cols-[12rem_1fr] [&_dt]:font-medium [&_dt]:text-(--text-muted) [&_dd]:m-0 [&_dd]:break-words">
+        <dt>Username</dt><dd>@Model.UserDetails.UserName</dd>
+        <dt>Email</dt><dd>@Model.UserDetails.Email</dd>
+        <dt>Phone Number</dt><dd>@(string.IsNullOrWhiteSpace(Model.UserDetails.PhoneNumber) ? "—" : Model.UserDetails.PhoneNumber)</dd>
+        <dt>Permissions</dt>
+        <dd>@(Model.Permissions.Count == 0 ? "None" : string.Join(", ", Model.Permissions))</dd>
+        <dt>Email confirmed</dt><dd>@(Model.UserDetails.EmailConfirmed ? "Yes" : "No")</dd>
+    </dl>
+    <div class="mt-8 flex flex-wrap items-center gap-4 border-t border-(--border-color) pt-6">
+        <a asp-page="./Edit" asp-route-id="@Model.UserDetails.Id" class="rounded bg-(--primary-color) px-5 py-2 font-semibold text-white no-underline hover:bg-(--primary-hover)">Edit user</a>
+        <a asp-page="./Delete" asp-route-id="@Model.UserDetails.Id">Delete user</a>
+        <a asp-page="./Index" class="text-sm text-(--text-muted) hover:text-(--text-main)">Back to users</a>
+    </div>
+</section>

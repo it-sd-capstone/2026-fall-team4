@@ -4,6 +4,8 @@ Event Ticket Flow is a web-based ticketing application that lets customers brows
 Installation:  
 Visual Studio 2026 .NET 9.0 Framework
 
+Event admin styling requires Node.js and npm. From the `EventTicketFlow` directory, run `npm install` followed by `npm run css:build` before building or publishing the app. Run `npm run css:watch` while editing the event views to regenerate the stylesheet automatically.
+
 NuGet packages to install:
 DotNetEnv V3.2.0  
 Microsoft.AspNetCore.Identity.EntityFrameworkCore  v9.0.22
