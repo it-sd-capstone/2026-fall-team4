@@ -1,0 +1,151 @@
+﻿/* ==========================================================================
+   Event Details Page
+   ========================================================================== */
+.detail-label {
+    font-weight: 600;
+}
+
+.event-details-page {
+    width: 100%;
+}
+
+.event-hero {
+    margin-bottom: 2rem;
+}
+
+.event-image-placeholder {
+    height: 400px;
+    border-radius: 12px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: var(--text-muted);
+}
+
+.event-date-range {
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+.event-details-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+}
+
+.event-information,
+.ticket-panel {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.event-information h1 {
+    margin-top: 0;
+}
+
+.event-header {
+    margin-bottom: 1.5rem;
+}
+
+.event-header h1 {
+    font-size: 3rem;
+    margin-bottom: .5rem;
+    margin-top: 0;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.page-links {
+    margin-bottom: 1rem;
+}
+
+.page-links a {
+    color: var(--primary-color);
+    text-decoration: none; 
+
+}
+
+.page-links a:hover {
+    text-decoration: underline;
+}
+
+.purchase-button {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.9rem;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--primary-color);
+    color: var(--text-main);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.purchase-button:hover {
+    background-color: var(--primary-hover);
+}
+
+
+@media (max-width: 768px) {
+    .event-details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .event-image-placeholder {
+        height: 250px;
+    }
+}
+
+.sold-out-button {
+    background-color: var(--danger-color);
+    cursor: not-allowed;
+    opacity: 0.75;
+}
+
+.sold-out-button:hover {
+    background-color: var(--danger-color);
+}
+
+.ticket-option {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.ticket-option-title {
+    align-items: center;
+    display: flex;
+    flex: 1;
+    gap: .5rem;
+}
+
+.ticket-option p {
+    margin: 0;
+}
+
+.ticket-price {
+    font-weight: 600;
+    min-width: 50px;
+    text-align: right;
+}
+.input.ticket-price {
+    width: 100px;
+}
+
+.quantity-required-button {
+    cursor: not-allowed;
+    opacity: 0.75;
+    background-color: var(--warning-color);
+}
