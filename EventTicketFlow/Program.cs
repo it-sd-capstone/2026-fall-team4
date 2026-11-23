@@ -125,12 +125,12 @@ app.Run();
 // the role will be added.
 static async Task CreateTestUser(UserManager<ApplicationUser> userManager, string email, string password, string role)
 {
-    // Check if the user exists
+    // Check if the user already exists
     var user = await userManager.FindByEmailAsync(email);
 
+    // Create the user if it doesn't exist
     if (user == null)
     {
-        // Create a new Identity user
         user = new ApplicationUser
         {
             UserName = email,
@@ -138,29 +138,22 @@ static async Task CreateTestUser(UserManager<ApplicationUser> userManager, strin
             EmailConfirmed = true
         };
 
-        // Create the user with the supplied password
         var result = await userManager.CreateAsync(user, password);
 
-        if (result.Succeeded)
+        if (!result.Succeeded)
         {
-            // Assign the user to the specified role
-            await userManager.AddToRoleAsync(user, role);
-        }
-        else
-        {
-            // Log any creation errors
             foreach (var error in result.Errors)
             {
                 Console.WriteLine($"Failed to create user {email}: {error.Description}");
             }
+
+            return;
         }
     }
-    else
+
+    // Ensure the user has the required role
+    if (!await userManager.IsInRoleAsync(user, role))
     {
-        // Ensure an existing user has the required role
-        if (!await userManager.IsInRoleAsync(user, role))
-        {
-            await userManager.AddToRoleAsync(user, role);
-        }
+        await userManager.AddToRoleAsync(user, role);
     }
 }
