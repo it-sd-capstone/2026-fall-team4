@@ -79,7 +79,7 @@
 
                 <p class="ticket-option-title">Quantity</p>
 
-                <input id="quantity" class="ticket-price" type="number" min="0" max="@ticketsRemaining" value="0" />
+                <input id="quantity" class="ticket-price" type="number" min="0" max="@ticketsRemaining" value="0" step="1" inputmode="numeric"/>
 
             </div>
 
@@ -152,6 +152,13 @@
                 quantityInput.value = ticketsRemaining;
             }
 
+            // Prevent negative quantities to be typed in
+            if (quantity < 0)
+            {
+                quantity = 0;
+                quantityInput.value = 0;
+            }
+
             // Calculate total based on selections
             let ticketPrice = basePrice;
 
@@ -192,6 +199,15 @@
                 purchaseButton.classList.remove('quantity-required-button');
             }
         }
+
+        // Prevents users from typing harmful factors
+        quantityInput.addEventListener('keydown', function (event)
+        {
+            if (['-', '.', '+', 'e', 'E'].includes(event.key))
+            {
+                event.preventDefault();
+            }
+        });
 
         quantityInput.addEventListener('input', calculateTotal);
         vipCheckbox.addEventListener('change', calculateTotal);
