@@ -19,7 +19,8 @@
 <div class="event-details-page">
 
     <div class="page-links">
-        <a asp-action="Index">← Back to Events</a>
+        <a asp-controller="Home"
+           asp-action="Index">← Back to Events</a>
     </div>
 
     <div class="event-header">
@@ -117,7 +118,10 @@
 
     @if (User.IsInRole("Admin") || User.IsInRole("EventManager"))
     {
-        <div class="page-links"><a asp-action="Edit"asp-route-id="@Model.Id">Edit Event</a>
+        <div class="page-links">
+        <a asp-area="Admin"
+           asp-page="/Event/Edit"
+           asp-route-id="@Model.Id">Edit Event</a>
         </div>
     }
 
