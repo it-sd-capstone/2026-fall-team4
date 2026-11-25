@@ -19,7 +19,8 @@
 <div class="event-details-page">
 
     <div class="page-links">
-        <a asp-action="Index">← Back to Events</a>
+        <a asp-controller="Home"
+           asp-action="Index">← Back to Events</a>
     </div>
 
     <div class="event-header">
@@ -79,7 +80,7 @@
 
                 <p class="ticket-option-title">Quantity</p>
 
-                <input id="quantity" class="ticket-price" type="number" min="0" max="@ticketsRemaining" value="0" />
+                <input id="quantity" class="ticket-price" type="number" min="0" max="@ticketsRemaining" value="0" step="1" inputmode="numeric"/>
 
             </div>
 
@@ -117,7 +118,10 @@
 
     @if (User.IsInRole("Admin") || User.IsInRole("EventManager"))
     {
-        <div class="page-links"><a asp-action="Edit"asp-route-id="@Model.Id">Edit Event</a>
+        <div class="page-links">
+        <a asp-area="Admin"
+           asp-page="/Event/Edit"
+           asp-route-id="@Model.Id">Edit Event</a>
         </div>
     }
 
@@ -150,6 +154,13 @@
             {
                 quantity = ticketsRemaining;
                 quantityInput.value = ticketsRemaining;
+            }
+
+            // Prevent negative quantities to be typed in
+            if (quantity < 0)
+            {
+                quantity = 0;
+                quantityInput.value = 0;
             }
 
             // Calculate total based on selections
@@ -192,6 +203,15 @@
                 purchaseButton.classList.remove('quantity-required-button');
             }
         }
+
+        // Prevents users from typing harmful factors
+        quantityInput.addEventListener('keydown', function (event)
+        {
+            if (['-', '.', '+', 'e', 'E'].includes(event.key))
+            {
+                event.preventDefault();
+            }
+        });
 
         quantityInput.addEventListener('input', calculateTotal);
         vipCheckbox.addEventListener('change', calculateTotal);

@@ -44,14 +44,14 @@
 
         <input type="search" name="searchTerm" value="@Model.SearchTerm" placeholder="Search for events here"/>
 
-        <select asp-for="Price">
+        <select asp-for="Price" data-auto-submit>
             <option value="">Any Price</option>
             <option value="under25">Under $25</option>
             <option value="25to75">$25 - $75</option>
             <option value="over75">Over $75</option>
         </select>
 
-        <select asp-for="Sort">
+        <select asp-for="Sort" data-auto-submit>
             <option value="">Date (Soonest)</option>
             <option value="priceLowToHigh">Price: Low to High</option>
             <option value="priceHighToLow">Price: High to Low</option>
@@ -137,8 +137,15 @@ else
     </div>
 }
 
-@*Footer*@
-<div class="footer">
-    <p>Test Text - Maybe we just have credits or copyright information</p>
-</div>
+@section Scripts {
+    <script>
+        // This will rerun the form when a dropdown is changed, so the user doesn't have to click the search button
+        document.querySelectorAll('[data-auto-submit]').forEach(function (dropdown) {
+            dropdown.addEventListener('change', function () {
+                dropdown.form.submit();
+            });
+        });
+    </script>
+}
+
 @* This page will display information about all public and open events. It will not show tickets to purchase or long details about the events, just a short breif about the event to let the user decide if they want to click on the event to see more information. The events will be displayed in a list format with the most recent events at the top of the page. Each event will have a link to the event details page where users can see more information about the event and purchase tickets if available. *@

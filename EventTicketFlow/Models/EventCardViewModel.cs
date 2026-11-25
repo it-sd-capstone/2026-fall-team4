@@ -52,13 +52,13 @@
             {
                 if (Status == "upcoming")
                 {
-                    return "Tickets on sale " + OpenDate.ToString("MMMd, yyyy");
+                    return "Tickets on sale " + OpenDate.ToString("MMM d, yyyy ");
                 }
                 if (Status == "closed")
                 {
-                    return "Event ended on " + CloseDate.ToString("MMMd, yyyy");
+                    return "Event ended on " + CloseDate.ToString("MMM d, yyyy ");
                 }
-                return "Sale ends on " + CloseDate.ToString("MMMd, yyyy");
+                return "Sale ends on " + CloseDate.ToString("MMM d, yyyy ");
             }
         }
 
