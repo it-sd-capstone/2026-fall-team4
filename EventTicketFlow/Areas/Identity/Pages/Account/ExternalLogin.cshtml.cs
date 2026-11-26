@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using EventTicketFlow.Data;
+using EventTicketFlow.Services;
 
 namespace EventTicketFlow.Areas.Identity.Pages.Account;
 
@@ -27,7 +28,7 @@ public class ExternalLoginModel : PageModel
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUserStore<ApplicationUser> _userStore;
     private readonly IUserEmailStore<ApplicationUser> _emailStore;
-    private readonly IEmailSender _emailSender;
+    private readonly NotificationEmailService _notifications;
     private readonly ILogger<ExternalLoginModel> _logger;
 
     public ExternalLoginModel(
@@ -35,14 +36,14 @@ public class ExternalLoginModel : PageModel
         UserManager<ApplicationUser> userManager,
         IUserStore<ApplicationUser> userStore,
         ILogger<ExternalLoginModel> logger,
-        IEmailSender emailSender)
+        NotificationEmailService notifications)
     {
         _signInManager = signInManager;
         _userManager = userManager;
         _userStore = userStore;
         _emailStore = GetEmailStore();
         _logger = logger;
-        _emailSender = emailSender;
+        _notifications = notifications;
     }
 
     /// <summary>
@@ -164,17 +165,22 @@ public class ExternalLoginModel : PageModel
                 {
                     _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
 
-                    var userId = await _userManager.GetUserIdAsync(user);
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code },
-                        protocol: Request.Scheme)!;
+                    try
+                    {
+                        var userId = await _userManager.GetUserIdAsync(user);
+                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                        var callbackUrl = Url.EmailPage(
+                            "/Account/ConfirmEmail",
+                            new { area = "Identity", userId = userId, code = code });
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                        await _notifications.SendBestEffortAsync(Input.Email, "Welcome to Event Ticket Flow",
+                            $"<p>Welcome to Event Ticket Flow!</p><p>Confirm your email to finish setting up your account: <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Confirm your email</a>.</p><p>If you did not create an account, you can ignore this email.</p>");
+                    }
+                    catch (InvalidOperationException exception)
+                    {
+                        _logger.LogError(exception, "Unable to create the account confirmation link.");
+                    }
 
                     // If account confirmation is required, we need to show the link if we don't have a real email sender
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)

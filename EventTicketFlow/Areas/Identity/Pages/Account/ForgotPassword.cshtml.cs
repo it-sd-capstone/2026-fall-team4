@@ -13,18 +13,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using EventTicketFlow.Data;
+using EventTicketFlow.Services;
 
 namespace EventTicketFlow.Areas.Identity.Pages.Account;
 
 public class ForgotPasswordModel : PageModel
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly IEmailSender _emailSender;
+    private readonly NotificationEmailService _notifications;
+    private readonly ILogger<ForgotPasswordModel> _logger;
 
-    public ForgotPasswordModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender)
+    public ForgotPasswordModel(UserManager<ApplicationUser> userManager, NotificationEmailService notifications, ILogger<ForgotPasswordModel> logger)
     {
         _userManager = userManager;
-        _emailSender = emailSender;
+        _notifications = notifications;
+        _logger = logger;
     }
 
     /// <summary>
@@ -62,24 +65,29 @@ public class ForgotPasswordModel : PageModel
 
             // For more information on how to enable account confirmation and password reset please
             // visit https://go.microsoft.com/fwlink/?LinkID=532713
-            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            var callbackUrl = Url.Page(
-                "/Account/ResetPassword",
-                pageHandler: null,
-                values: new { area = "Identity", code },
-                protocol: Request.Scheme)!;
-
-            var storedEmail = await _userManager.GetEmailAsync(user);
-            if (string.IsNullOrEmpty(storedEmail))
+            try
             {
-                throw new InvalidOperationException("Users must have an email.");
-            }
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                var callbackUrl = Url.EmailPage(
+                    "/Account/ResetPassword",
+                    new { area = "Identity", code });
 
-            await _emailSender.SendEmailAsync(
-                storedEmail,
-                "Reset Password",
-                $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                var storedEmail = await _userManager.GetEmailAsync(user);
+                if (string.IsNullOrEmpty(storedEmail))
+                {
+                    throw new InvalidOperationException("Users must have an email.");
+                }
+
+                await _notifications.SendBestEffortAsync(
+                    storedEmail,
+                    "Reset your Event Ticket Flow password",
+                    $"<p>We received a request to reset your password.</p><p><a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Reset your password</a></p><p>If you did not request this, you can ignore this email.</p>");
+            }
+            catch (InvalidOperationException exception)
+            {
+                _logger.LogError(exception, "Unable to create the password reset link.");
+            }
 
             return RedirectToPage("./ForgotPasswordConfirmation");
         }

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using EventTicketFlow.Data;
+using EventTicketFlow.Services;
 
 namespace EventTicketFlow.Areas.Identity.Pages.Account.Manage;
 
@@ -17,15 +18,18 @@ public class ChangePasswordModel : PageModel
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly ILogger<ChangePasswordModel> _logger;
+    private readonly NotificationEmailService _notifications;
 
     public ChangePasswordModel(
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
-        ILogger<ChangePasswordModel> logger)
+        ILogger<ChangePasswordModel> logger,
+        NotificationEmailService notifications)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _logger = logger;
+        _notifications = notifications;
     }
 
     /// <summary>
@@ -118,6 +122,11 @@ public class ChangePasswordModel : PageModel
         }
 
         await _signInManager.RefreshSignInAsync(user);
+        var email = await _userManager.GetEmailAsync(user);
+        if (!string.IsNullOrEmpty(email))
+        {
+            await _notifications.SendPasswordChangedAsync(email);
+        }
         _logger.LogInformation("User changed their password successfully.");
         StatusMessage = "Your password has been changed.";
 

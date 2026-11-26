@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using EventTicketFlow.Data;
+using EventTicketFlow.Services;
 
 namespace EventTicketFlow.Areas.Identity.Pages.Account.Manage;
 
@@ -15,13 +16,16 @@ public class SetPasswordModel : PageModel
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly NotificationEmailService _notifications;
 
     public SetPasswordModel(
         UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager)
+        SignInManager<ApplicationUser> signInManager,
+        NotificationEmailService notifications)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _notifications = notifications;
     }
 
     /// <summary>
@@ -106,6 +110,11 @@ public class SetPasswordModel : PageModel
         }
 
         await _signInManager.RefreshSignInAsync(user);
+        var email = await _userManager.GetEmailAsync(user);
+        if (!string.IsNullOrEmpty(email))
+        {
+            await _notifications.SendPasswordChangedAsync(email);
+        }
         StatusMessage = "Your password has been set.";
 
         return RedirectToPage();

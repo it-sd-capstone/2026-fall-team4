@@ -4,19 +4,22 @@ using EventTicketFlow.Data;
 using EventTicketFlow.Models;
 using Microsoft.AspNetCore.Identity;
 using EventTicketFlow.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
-DotNetEnv.Env.Load();
+Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("AppDbContext") ?? throw new InvalidOperationException("Connection string 'AppDbContext' not found.");
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<EventTicketFlow.Data.AppDbContext>(options =>
-    options.UseSqlServer(DotNetEnv.Env.GetString("CONNECTION_STRING")));
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(Env.GetString("CONNECTION_STRING")));
 
 builder.Services.AddTransient<TestDataService>();
 builder.Services.AddTransient<EventService>();
+builder.Services.AddTransient<IEmailSender, SmtpEmailSender>();
+builder.Services.AddTransient<NotificationEmailService>();
 
 
 // Add services to the container.
@@ -116,7 +119,7 @@ using (var scope = app.Services.CreateScope())
         }
     }
 
-    if (DotNetEnv.Env.GetString("SEED_TEST_DATA") == "true")
+    if (Env.GetString("SEED_TEST_DATA") == "true")
     {
         var testDataService = scope.ServiceProvider.GetRequiredService<TestDataService>();
         testDataService.PopulateTestData();

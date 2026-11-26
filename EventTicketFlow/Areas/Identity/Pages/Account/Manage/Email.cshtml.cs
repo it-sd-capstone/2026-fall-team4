@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using EventTicketFlow.Data;
+using EventTicketFlow.Services;
 
 namespace EventTicketFlow.Areas.Identity.Pages.Account.Manage;
 
@@ -20,15 +21,18 @@ public class EmailModel : PageModel
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IEmailSender _emailSender;
+    private readonly ILogger<EmailModel> _logger;
 
     public EmailModel(
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
-        IEmailSender emailSender)
+        IEmailSender emailSender,
+        ILogger<EmailModel> logger)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _emailSender = emailSender;
+        _logger = logger;
     }
 
     /// <summary>
@@ -118,15 +122,22 @@ public class EmailModel : PageModel
             var userId = await _userManager.GetUserIdAsync(user);
             var code = await _userManager.GenerateChangeEmailTokenAsync(user, Input.NewEmail);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            var callbackUrl = Url.Page(
-                "/Account/ConfirmEmailChange",
-                pageHandler: null,
-                values: new { area = "Identity", userId = userId, email = Input.NewEmail, code = code },
-                protocol: Request.Scheme)!;
-            await _emailSender.SendEmailAsync(
-                Input.NewEmail,
-                "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+            try
+            {
+                var callbackUrl = Url.EmailPage(
+                    "/Account/ConfirmEmailChange",
+                    new { area = "Identity", userId = userId, email = Input.NewEmail, code = code });
+                await _emailSender.SendEmailAsync(
+                    Input.NewEmail,
+                    "Confirm your new email address",
+                    $"<p>Confirm your new Event Ticket Flow email address: <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Confirm email change</a>.</p><p>If you did not request this, you can ignore this email.</p>");
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, "Unable to send the email change confirmation.");
+                StatusMessage = "The confirmation email could not be sent. Please try again later.";
+                return RedirectToPage();
+            }
 
             StatusMessage = "Confirmation link to change email sent. Please check your email.";
             return RedirectToPage();
@@ -154,15 +165,22 @@ public class EmailModel : PageModel
         var email = await _userManager.GetEmailAsync(user);
         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-        var callbackUrl = Url.Page(
-            "/Account/ConfirmEmail",
-            pageHandler: null,
-            values: new { area = "Identity", userId = userId, code = code },
-            protocol: Request.Scheme)!;
-        await _emailSender.SendEmailAsync(
-            email!,
-            "Confirm your email",
-            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+        try
+        {
+            var callbackUrl = Url.EmailPage(
+                "/Account/ConfirmEmail",
+                new { area = "Identity", userId = userId, code = code });
+            await _emailSender.SendEmailAsync(
+                email!,
+                "Confirm your email",
+                $"<p>Confirm your Event Ticket Flow email address: <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Confirm your email</a>.</p>");
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Unable to send the email verification.");
+            StatusMessage = "The verification email could not be sent. Please try again later.";
+            return RedirectToPage();
+        }
 
         StatusMessage = "Verification email sent. Please check your email.";
         return RedirectToPage();

@@ -11,16 +11,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using EventTicketFlow.Data;
+using EventTicketFlow.Services;
 
 namespace EventTicketFlow.Areas.Identity.Pages.Account;
 
 public class ResetPasswordModel : PageModel
 {
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly NotificationEmailService _notifications;
 
-    public ResetPasswordModel(UserManager<ApplicationUser> userManager)
+    public ResetPasswordModel(UserManager<ApplicationUser> userManager, NotificationEmailService notifications)
     {
         _userManager = userManager;
+        _notifications = notifications;
     }
 
     /// <summary>
@@ -104,6 +107,11 @@ public class ResetPasswordModel : PageModel
         var result = await _userManager.ResetPasswordAsync(user, Input.Code, Input.Password);
         if (result.Succeeded)
         {
+            var email = await _userManager.GetEmailAsync(user);
+            if (!string.IsNullOrEmpty(email))
+            {
+                await _notifications.SendPasswordChangedAsync(email);
+            }
             return RedirectToPage("./ResetPasswordConfirmation");
         }
 

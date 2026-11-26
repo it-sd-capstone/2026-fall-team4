@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using EventTicketFlow.Data;
+using EventTicketFlow.Services;
 
 namespace EventTicketFlow.Areas.Identity.Pages.Account;
 
@@ -20,12 +21,14 @@ namespace EventTicketFlow.Areas.Identity.Pages.Account;
 public class ResendEmailConfirmationModel : PageModel
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly IEmailSender _emailSender;
+    private readonly NotificationEmailService _notifications;
+    private readonly ILogger<ResendEmailConfirmationModel> _logger;
 
-    public ResendEmailConfirmationModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender)
+    public ResendEmailConfirmationModel(UserManager<ApplicationUser> userManager, NotificationEmailService notifications, ILogger<ResendEmailConfirmationModel> logger)
     {
         _userManager = userManager;
-        _emailSender = emailSender;
+        _notifications = notifications;
+        _logger = logger;
     }
 
     /// <summary>
@@ -68,24 +71,29 @@ public class ResendEmailConfirmationModel : PageModel
             return Page();
         }
 
-        var userId = await _userManager.GetUserIdAsync(user);
-        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-        var callbackUrl = Url.Page(
-            "/Account/ConfirmEmail",
-            pageHandler: null,
-            values: new { userId = userId, code = code },
-            protocol: Request.Scheme)!;
-        var storedEmail = await _userManager.GetEmailAsync(user);
-        if (string.IsNullOrEmpty(storedEmail))
+        try
         {
-            throw new InvalidOperationException("Users must have an email.");
-        }
+            var userId = await _userManager.GetUserIdAsync(user);
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            var callbackUrl = Url.EmailPage(
+                "/Account/ConfirmEmail",
+                new { area = "Identity", userId = userId, code = code });
+            var storedEmail = await _userManager.GetEmailAsync(user);
+            if (string.IsNullOrEmpty(storedEmail))
+            {
+                throw new InvalidOperationException("Users must have an email.");
+            }
 
-        await _emailSender.SendEmailAsync(
-            storedEmail,
-            "Confirm your email",
-            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+            await _notifications.SendBestEffortAsync(
+                storedEmail,
+                "Confirm your email",
+                $"<p>Confirm your Event Ticket Flow email address: <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Confirm your email</a>.</p><p>If you did not request this, you can ignore this email.</p>");
+        }
+        catch (InvalidOperationException exception)
+        {
+            _logger.LogError(exception, "Unable to create the account confirmation link.");
+        }
 
         ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
         return Page();
