@@ -76,11 +76,21 @@
 
             <h2>Tickets</h2>
 
+            <form asp-controller="Checkout" 
+                  asp-action="Index"
+                  method="post"
+                  id="purchaseForm">
+              
+                  <input type="hidden" name="EventId" value="@Model.Id" />
+                  <input type="hidden" name="DiscountCode" id="appliedDiscountCode" />
+                  
+              
+
             <div class="ticket-option">
 
                 <p class="ticket-option-title">Quantity</p>
 
-                <input id="quantity" class="ticket-price" type="number" min="0" max="@ticketsRemaining" value="0" step="1" inputmode="numeric"/>
+                <input id="quantity" name="Quantity" class="ticket-price" type="number" min="0" max="@ticketsRemaining" value="0" step="1" inputmode="numeric"/>
 
             </div>
 
@@ -90,14 +100,14 @@
             </div>
 
             <div class="ticket-option">
-                <input type="checkbox"id="vipCheckbox" />
+                <input type="checkbox"id="vipCheckbox" name="IsVip" value="true" />
 
                 <p class="ticket-option-title">VIP Access</p>
                 <p class="ticket-price">(+@ticketType?.VipPrice.ToString("C"))</p>
             </div>
 
             <div class="ticket-option">
-                <input type="checkbox" id="fastTrackCheckbox" />
+                <input type="checkbox" id="fastTrackCheckbox" name="IsFastTrack" value="true" />
                 <p class ="ticket-option-title">Fast Track</p>
                 <p class="ticket-price">(+@ticketType?.FastTrackPrice.ToString("C"))</p>
             </div>
@@ -126,7 +136,9 @@
 
             </div>
 
-                <button id="purchaseButton" class="purchase-button">Purchase Tickets</button>
+                <button type="submit" id="purchaseButton" class="purchase-button">Purchase Tickets</button>
+
+            </form>
 
         </aside>
 
@@ -161,6 +173,7 @@
         const discountRow = document.getElementById('discountRow');
         const discountPercent = document.getElementById('discountPercent');
         const discountAmountText = document.getElementById('discountAmount');
+        const appliedDiscountInput = document.getElementById('appliedDiscountCode');
 
         // Percent off from the last code that passed the check (0 = none)
         let percentOff = 0;
@@ -251,25 +264,32 @@
         {
             const code = discountInput.value.trim();
 
-            try {
+            try 
+            {
                 const response = await fetch('@Url.Action("Check", "Discount")?code=' + encodeURIComponent(code));
                 const result = await response.json();
 
                 discountMessage.innerText = result.message;
 
-                if (result.isValid) {
+                if (result.isValid) 
+                {
                     percentOff = result.percentOff;
+                    appliedDiscountInput.value = code;
                     discountMessage.classList.remove('discount-error');
                     discountMessage.classList.add('discount-success');
                 }
-                else {
+                else 
+                {
                     percentOff = 0;
+                    appliedDiscountInput.value = "";
                     discountMessage.classList.remove('discount-success');
                     discountMessage.classList.add('discount-error');
                 }
             }
-            catch {
+            catch 
+            {
                 percentOff = 0;
+                appliedDiscountInput.value = "";
                 discountMessage.innerText = "Couldn't check that code right now. Please try again.";
                 discountMessage.classList.remove('discount-success');
                 discountMessage.classList.add('discount-error');
@@ -298,6 +318,7 @@
             if (percentOff > 0)
             {
                 percentOff = 0;
+                appliedDiscountInput.value = "";
                 discountMessage.innerText = "";
                 calculateTotal();
             }
