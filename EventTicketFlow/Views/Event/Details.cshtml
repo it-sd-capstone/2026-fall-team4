@@ -99,17 +99,29 @@
                 <p class="ticket-price">@ticketType?.GeneralPrice.ToString("C")</p>
             </div>
 
+            <div class="ticket-addon">
             <div class="ticket-option">
-                <input type="checkbox"id="vipCheckbox" name="IsVip" value="true" />
+                <input type="checkbox"id="vipCheckbox" name="IsVip" value="true"
+                       aria-describedby="vipHelp"/>
 
                 <p class="ticket-option-title">VIP Access</p>
-                <p class="ticket-price">(+@ticketType?.VipPrice.ToString("C"))</p>
+                <p class="ticket-price">(+@ticketType?.VipPrice.ToString("C") per ticket)</p>
+            </div>
+                <p id="vipHelp" class="ticket-option-help">
+                    This option grants VIP entrance's and has a premium viewing/seating seciton!
+                </p>
             </div>
 
+            <div class="ticket-addon">
             <div class="ticket-option">
-                <input type="checkbox" id="fastTrackCheckbox" name="IsFastTrack" value="true" />
+                <input type="checkbox" id="fastTrackCheckbox" name="IsFastTrack" value="true" 
+                       aria-describedby="fastTrackHelp"/>
                 <p class ="ticket-option-title">Fast Track</p>
-                <p class="ticket-price">(+@ticketType?.FastTrackPrice.ToString("C"))</p>
+                <p class="ticket-price">(+@ticketType?.FastTrackPrice.ToString("C") per ticket)</p>
+            </div>
+                <p id="fastTrackHelp" class="ticket-option-help">
+                    This option allows you to skip the regular lines for the main event and for any consessions!
+                </p>
             </div>
 
             <div class="discount-option">
