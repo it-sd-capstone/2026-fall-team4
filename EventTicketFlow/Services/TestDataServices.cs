@@ -214,6 +214,60 @@ namespace EventTicketFlow.Services
             _context.SaveChanges();
         }
 
+        // Discount codes
+        public void PopulateDiscounts()
+        {
+            // Only fill an empty Discounts table
+            if (_context.Discounts.Any())
+            {
+                return;
+            }
+
+            // Works
+            Discount discount1 = new Discount();
+            discount1.Code = "WELCOME10";
+            discount1.PercentOff = 10;
+
+            // Works
+            Discount discount2 = new Discount();
+            discount2.Code = "HOLIDAY25";
+            discount2.PercentOff = 25;
+            discount2.ExpirationDate = new DateTime(2026, 12, 31);
+
+            // Fails because expired
+            Discount discount3 = new Discount();
+            discount3.Code = "EXPIRED15";
+            discount3.PercentOff = 15;
+            discount3.ExpirationDate = new DateTime(2026, 11, 1);
+
+            // Fails because it's turned off
+            Discount discount4 = new Discount();
+            discount4.Code = "INACTIVE20";
+            discount4.PercentOff = 20;
+            discount4.IsActive = false;
+
+            // Fails because every use is taken
+            Discount discount5 = new Discount();
+            discount5.Code = "LIMITED50";
+            discount5.PercentOff = 50;
+            discount5.MaxUses = 5;
+            discount5.TimesUsed = 5;
+
+            // Works
+            Discount discount6 = new Discount();
+            discount6.Code = "BLACKFRIDAY20";
+            discount6.PercentOff = 20;
+
+            _context.Discounts.Add(discount1);
+            _context.Discounts.Add(discount2);
+            _context.Discounts.Add(discount3);
+            _context.Discounts.Add(discount4);
+            _context.Discounts.Add(discount5);
+            _context.Discounts.Add(discount6);
+
+            _context.SaveChanges();
+        }
+
     }
 
 }

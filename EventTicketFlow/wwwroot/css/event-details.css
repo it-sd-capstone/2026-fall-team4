@@ -149,3 +149,52 @@
     opacity: 0.75;
     background-color: var(--warning-color);
 }
+
+
+.discount-option {
+    margin: 1rem 0;
+}
+
+.discount-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+    .discount-row input {
+        flex: 1;
+        min-width: 0;
+    }
+
+.discount-message {
+    font-size: 0.9rem;
+    margin: 0.5rem 0 0;
+}
+
+.discount-success {
+    color: var(--success-color);
+}
+
+.discount-error {
+    color: var(--danger-color);
+}
+
+.ticket-addon {
+    margin-bottom: 1rem;
+}
+
+    .ticket-addon .ticket-option {
+        margin-bottom: 0.25rem;
+    }
+
+.ticket-option-help {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin: 0;
+    padding-left: 1.75rem;
+}
+
+label.ticket-option-title {
+    cursor: pointer;
+}

@@ -28,6 +28,10 @@ namespace EventTicketFlow.Data
             modelBuilder.Entity<PurchasedTicket>()
                 .HasOne(p => p.Customer).WithMany(c => c.Tickets)
                 .HasForeignKey(p => p.CustomerId).OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Discount>()
+                .HasIndex(d => d.Code)
+                .IsUnique();
         }
 
         public DbSet<Customer> Customers { get; set; }
@@ -35,6 +39,7 @@ namespace EventTicketFlow.Data
         public DbSet<TicketType> TicketTypes { get; set; }
         public DbSet<PurchasedTicket> PurchasedTickets { get; set; }
         public DbSet<Settings> Settings { get; set; }
+        public DbSet<Discount> Discounts { get; set; }
 
     }
 }
