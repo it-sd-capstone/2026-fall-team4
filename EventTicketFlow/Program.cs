@@ -17,6 +17,7 @@ builder.Services.AddDbContext<EventTicketFlow.Data.AppDbContext>(options =>
 
 builder.Services.AddTransient<TestDataService>();
 builder.Services.AddTransient<EventService>();
+builder.Services.AddTransient<DiscountService>();
 
 
 // Add services to the container.
@@ -120,6 +121,7 @@ using (var scope = app.Services.CreateScope())
     {
         var testDataService = scope.ServiceProvider.GetRequiredService<TestDataService>();
         testDataService.PopulateTestData();
+        testDataService.PopulateDiscounts();
     }
 }
 

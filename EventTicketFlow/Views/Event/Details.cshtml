@@ -102,7 +102,23 @@
                 <p class="ticket-price">(+@ticketType?.FastTrackPrice.ToString("C"))</p>
             </div>
 
+            <div class="discount-option">
+                <label for="discountCode" class="ticket-option-title">Discount Code</label>
+
+                <div class="discount-row">
+                    <input id="discountCode" type="text" maxlength="50" autocomplete="off" placeholder="Enter code" />
+                    <button type="button" id="applyDiscountButton">Apply</button>
+                </div>
+
+                <p id="discountMessage" class="discount-message" aria-live="polite"></p>
+            </div>
+
             <hr />
+
+            <div class="ticket-option" id="discountRow" hidden>
+                <span>Discount (<span id="discountPercent"></span>%)</span>
+                <span id="discountAmount"></span>
+            </div>
 
             <div class="ticket-option">
                 <span>Total Cost</span>
@@ -137,6 +153,17 @@
         const fastTrackCheckbox = document.getElementById('fastTrackCheckbox');
         const totalCost = document.getElementById('totalCost');
         const purchaseButton = document.getElementById('purchaseButton');
+
+        // map discount variables from view
+        const discountInput = document.getElementById('discountCode');
+        const applyDiscountButton = document.getElementById('applyDiscountButton');
+        const discountMessage = document.getElementById('discountMessage');
+        const discountRow = document.getElementById('discountRow');
+        const discountPercent = document.getElementById('discountPercent');
+        const discountAmountText = document.getElementById('discountAmount');
+
+        // Percent off from the last code that passed the check (0 = none)
+        let percentOff = 0;
         const ticketsRemaining = @ticketsRemaining;
 
         // map prices for each ticket option
@@ -178,6 +205,21 @@
 
             let total = ticketPrice * quantity;
 
+            // Take the discount off if a code has been applied
+            if (percentOff > 0) 
+            {
+                let discountAmount = total * percentOff / 100;
+                total = total - discountAmount;
+
+                discountPercent.innerText = percentOff;
+                discountAmountText.innerText = '-$' + discountAmount.toFixed(2);
+                discountRow.hidden = false;
+            }
+            else 
+            {
+                discountRow.hidden = true;
+            }
+
             totalCost.innerText = '$' + total.toFixed(2);
 
             // Purchase button state management
@@ -204,6 +246,38 @@
             }
         }
 
+        // Ask the server if the code is good then update the total
+        async function applyDiscount() 
+        {
+            const code = discountInput.value.trim();
+
+            try {
+                const response = await fetch('@Url.Action("Check", "Discount")?code=' + encodeURIComponent(code));
+                const result = await response.json();
+
+                discountMessage.innerText = result.message;
+
+                if (result.isValid) {
+                    percentOff = result.percentOff;
+                    discountMessage.classList.remove('discount-error');
+                    discountMessage.classList.add('discount-success');
+                }
+                else {
+                    percentOff = 0;
+                    discountMessage.classList.remove('discount-success');
+                    discountMessage.classList.add('discount-error');
+                }
+            }
+            catch {
+                percentOff = 0;
+                discountMessage.innerText = "Couldn't check that code right now. Please try again.";
+                discountMessage.classList.remove('discount-success');
+                discountMessage.classList.add('discount-error');
+            }
+
+            calculateTotal();
+        }
+
         // Prevents users from typing harmful factors
         quantityInput.addEventListener('keydown', function (event)
         {
@@ -216,6 +290,19 @@
         quantityInput.addEventListener('input', calculateTotal);
         vipCheckbox.addEventListener('change', calculateTotal);
         fastTrackCheckbox.addEventListener('change', calculateTotal);
+        applyDiscountButton.addEventListener('click', applyDiscount);
+
+        // Editing the code will remove the discount until they click apply again
+        discountInput.addEventListener('input', function ()
+        {
+            if (percentOff > 0)
+            {
+                percentOff = 0;
+                discountMessage.innerText = "";
+                calculateTotal();
+            }
+
+        });
 
         calculateTotal();
 
